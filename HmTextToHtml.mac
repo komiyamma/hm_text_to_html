@@ -1,0 +1,54 @@
+﻿jsmode "WebView2\\" + currentmacrofilename;
+
+js {
+
+function escapeHtml(text) {
+    let count = 0;
+
+    const escapeChar = (chr) => {
+        switch (chr) {
+            case '&': count++; return "&amp;";
+            case '<': count++; return "&lt;";
+            case '>': count++; return "&gt;";
+            case '"': count++; return "&quot;";
+            case "'": count++; return "&#039;";
+            default: return chr;
+        }
+    };
+
+    let escapedText = text.split('').map(escapeChar).join('');
+
+    return {
+        escapedText,
+        count
+    };
+}
+
+if (selecting()) {
+    const targetText = getselectedtext();
+    if (targetText) {
+        let escapedHtmlObj = escapeHtml(targetText);
+
+        insert(escapedHtmlObj.escapedText);
+        writeOutputPane(escapedHtmlObj.count + "個を置き替えました。");
+    }
+} else {
+    const targetText = gettotaltext();
+    if (targetText) {
+        let escapedHtmlObj = escapeHtml(targetText);
+
+        settotaltext(escapedHtmlObj.escapedText);
+        writeOutputPane(escapedHtmlObj.count + "個を置き替えました。");
+    }
+
+}
+
+// エラーメッセージ用
+function writeOutputPane(msg) {
+    let dll = loaddll("HmOutputPane.dll");
+    dll.dllFunc.Output(hidemaru.getCurrentWindowHandle(), msg + "\r\n");
+}
+
+
+
+}
