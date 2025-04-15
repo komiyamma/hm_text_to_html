@@ -3,44 +3,29 @@
 js {
 
 function escapeHtml(text) {
-    let count = 0;
-
-    const escapeChar = (chr) => {
-        switch (chr) {
-            case '&': count++; return "&amp;";
-            case '<': count++; return "&lt;";
-            case '>': count++; return "&gt;";
-            case '"': count++; return "&quot;";
-            case "'": count++; return "&#039;";
-            default: return chr;
-        }
+    const escapeMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
     };
 
-    let escapedText = text.split('').map(escapeChar).join('');
+    // エスケープ対象の文字をキーとして持つ正規表現を自動生成
+    const escapeChars = Object.keys(escapeMap).join('');
+    const escapeRegex = new RegExp(`[${escapeChars}]`, 'g');
+
+    let count = 0;
+
+    const escapedText = text.replace(escapeRegex, (match) => {
+        count++;
+        return escapeMap[match];
+    });
 
     return {
         escapedText,
         count
     };
-}
-
-if (selecting()) {
-    const targetText = getselectedtext();
-    if (targetText) {
-        let escapedHtmlObj = escapeHtml(targetText);
-
-        insert(escapedHtmlObj.escapedText);
-        writeOutputPane(escapedHtmlObj.count + "個を置き替えました。");
-    }
-} else {
-    const targetText = gettotaltext();
-    if (targetText) {
-        let escapedHtmlObj = escapeHtml(targetText);
-
-        settotaltext(escapedHtmlObj.escapedText);
-        writeOutputPane(escapedHtmlObj.count + "個を置き替えました。");
-    }
-
 }
 
 // エラーメッセージ用
@@ -49,6 +34,27 @@ function writeOutputPane(msg) {
     dll.dllFunc.Output(hidemaru.getCurrentWindowHandle(), msg + "\r\n");
 }
 
+function main() {
+    if (selecting()) {
+        const targetText = getselectedtext();
+        if (targetText) {
+            let escapedHtmlObj = escapeHtml(targetText);
 
+            insert(escapedHtmlObj.escapedText);
+            writeOutputPane(escapedHtmlObj.count + "個を置き替えました。");
+        }
+    } else {
+        const targetText = gettotaltext();
+        if (targetText) {
+            let {escapedText, count} = escapeHtml(targetText);
+
+            settotaltext(escapedHtmlObj.escapedText);
+            writeOutputPane(escapedHtmlObj.count + "個を置き替えました。");
+        }
+    }
+}
+
+// 同期で処理する必要はない。非同期で十分
+hidemaru.setTimeout(main, 0);
 
 }
