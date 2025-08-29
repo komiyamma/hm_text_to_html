@@ -1,4 +1,5 @@
 ﻿// Under CC0
+// HmTextToHtml v.0.0
 
 jsmode "WebView2\\" + currentmacrofilename;
 
