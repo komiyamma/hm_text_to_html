@@ -1,4 +1,6 @@
-﻿jsmode "WebView2\\" + currentmacrofilename;
+﻿// Under CC0
+
+jsmode "WebView2\\" + currentmacrofilename;
 
 js {
 
