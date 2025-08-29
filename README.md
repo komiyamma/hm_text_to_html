@@ -1,5 +1,7 @@
 # HmTextToHtml
 
+![HmTextToHtml latest by date](https://img.shields.io/github/v/release/komiyamma/hm_text_to_html?style=flat-square)
+
 テキストをHTMLへ、単なるHTML ESCape
 
 https://秀丸マクロ.net/?page=nobu_tool_hm_text_to_html
